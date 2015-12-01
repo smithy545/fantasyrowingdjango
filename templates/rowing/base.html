@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang='en' xml:lang='en'>
+<head>
+	<title>Fantasy Rowing</title>
+	<link rel="stylesheet" type="text/css" href="mainstylesheet.css">
+	<script src="functions.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		setCookie("logged-in", "tdrue", 10);
+	</script>
+</head>
+<body>
+	<div id="top-bar">
+		{% if user.is_authenticated %}
+			<p>{{ user.username }}</p>
+		{% else %}
+			<a href="{% url 'runleague:sign_in' %}">Sign in</a>
+		{% endif %}
+	</div>
+	<div id="title-bar">
+		<h1 id="title">Get Money</h1>
+	</div>
+	<div id="nav-container">
+		<ul class="nav-bar">
+			<li>
+				<a href="index">Home</a>
+			</li>
+			<li>
+				<a href="about">About</a>
+			</li>
+			<li>
+				<a href="team">My Team</a>
+			</li>
+		</ul>
+	</div>
+	<div id="main">
+	{% if team_list %}
+		<ul>
+		{% for team in team_list %}
+			<li><a href="{% url 'runleague:team_detail' team.id %}">{{team.name}}</a></li>
+		{% endfor %}
+		</ul>
+		<a href="{% url 'runleague:team_page' 1 %}">Next Page</a>
+	{% else %}
+		<p>No teams are available.</p>
+	{% endif %}
+	</div>
+</body>
+<html>

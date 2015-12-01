@@ -1,0 +1,23 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Create Team{% endblock %}
+
+{% block main_block %}
+
+{% if user.is_authenticated %}
+	{% if user.league_set.first %}
+	<p>You are in the {{user.league}} league.</p>
+	{% else%}
+	<form action='maketeam' method='post'>
+		{% csrf_token %}
+		<a href="{% url 'runleague:new_league' %}">New League...</a>
+		{{form.as_p}}
+		<input type='submit' value='Submit'>
+		{% csrf_token %}
+	</form>
+	{% endif %}
+{% else %}
+<p>You are not signed in. To make a team please <a href="{% url 'runleague:sign_in' %}">sign in.</a></p>
+{% endif %}
+
+{% endblock %}

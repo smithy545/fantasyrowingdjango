@@ -1,0 +1,22 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block main_block %}
+
+<p>Welcome to Fantasy Rowing</p>
+	
+{% if team_list %}
+<ul>
+	{% for team in team_list %}
+	<li><a href="{% url 'runleague:team_detail' team.id %}">{{team.name}}</a></li>
+	{% endfor %}
+</ul>
+
+<a href="{% url 'runleague:team_page' 1 %}">></a>
+
+{% else %}
+<p>No teams are available.</p>
+{% endif %}
+
+{% endblock %}

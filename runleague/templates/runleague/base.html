@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang='en' xml:lang='en'>
+<head>
+	<title>Fantasy Rowing - {% block title %}Title{% endblock %}</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'runleague/mainstylesheet.css' %}" />
+</head>
+<body>
+	<div id="top-bar">
+		{% if user.is_authenticated %}
+		<p>{{ user.username }} <a href="{% url 'runleague:sign_out' %}">Sign out</a></p>
+		{% else %}
+		<a href="{% url 'runleague:sign_in' %}">Sign in</a>
+		{% endif %}
+	</div>
+	<div id="title-bar">
+		<h1 id="title">Get Money</h1>
+	</div>
+	<div id="nav-container">
+		<ul class="nav-bar">
+			<li>
+				<a href="{% url 'runleague:index' %}">Home</a>
+			</li>
+			<li>
+				<a href="{% url 'runleague:about' %}">About</a>
+			</li>
+			<li>
+				<a href="{% url 'runleague:my_team_detail' %}">Team</a>
+			</li>
+			<li>
+				<a href="{% url 'runleague:my_league_detail' %}">League</a>
+			</li>
+			<li>
+				<a href="{% url 'runleague:draft' %}">Draft Team</a>
+			</li>
+		</ul>
+	</div>
+	<div id="main">
+	{% block main_block %}Default main content{% endblock %}
+	</div>
+</body>
+<html>

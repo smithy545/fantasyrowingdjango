@@ -1,0 +1,23 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Create League{% endblock %}
+
+{% block main_block %}
+
+{% if user.is_authenticated %}
+	{% if user.members.first %}
+	<p>You are already in the {{user.league}} league.</p>
+	{% else%}
+	<h2>New League</h2>
+	<form action='newleague' method='post'>
+		{% csrf_token %}
+		{{form.as_p}}
+		<input type='submit' value='Submit'>
+		{% csrf_token %}
+	</form>
+	{% endif %}
+{% else %}
+<p>You are not signed in. To make a league please <a href="{% url 'runleague:sign_in' %}">sign in.</a></p>
+{% endif %}
+
+{% endblock %}

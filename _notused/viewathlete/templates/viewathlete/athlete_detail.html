@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	body {background-color:#5DB0BB}
+	h2 {color:#C2EAF0}
+	li {color:#C2EAF0}
+	</style>
+</head>
+<body>
+	<h2>{{ rower.first_name }} {{ rower.last_name }}</h2>
+	<ul>
+		{% if rower.age %}
+		<li>{{ rower.age }} years</li>
+		{% endif %}
+		{% if rower.birth_date %}
+		<li>{{ rower.birth_date }}</li>
+		{% endif %}
+		{% if rower.height %}
+		<li>{{ rower.height }} cm</li>
+		{% endif %}
+		{% if rower.weight %}
+		<li>{{ rower.weight }} kg</li>
+		{% endif %}
+		{% if rower.clubs %}
+		<li>{{ rower.clubs }}</li>
+		{% endif %}
+		{% if rower.started_rowing %}
+		<li>Rowing since {{rower.started_rowing}}</li>
+		{% endif %}
+		{% if rower.residence %}
+		<li>{{ rower.residence }}</li>
+		{% endif %}
+	</ul>
+	<a href="{% url 'viewathlete:page' referrent %}">Back</a>
+</body>
+<html>

@@ -1,0 +1,18 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block main_block %}
+
+{% if user.is_authenticated %}
+<p>Logged in</p>
+{% else %}
+<p>Signup</p>
+<form action='signup' method='post'>
+	{% csrf_token %}
+	{{form.as_p}}
+	<input type='submit' value='Submit'>
+	{% csrf_token %}
+</form>
+{% endif %}
+{% endblock %}

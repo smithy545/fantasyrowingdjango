@@ -1,0 +1,30 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Athletes{% endblock %}
+
+{% block main_block %}
+
+{% if rower_list %}
+	<ul>
+	{% for rower in rower_list %}
+		<li><a href="{% url 'viewathlete:detail' rower.id%}">{{rower.last_name}}, {{rower.first_name}}</a></li>
+	{% endfor %}
+	</ul>
+	<p style="font-size:20;">
+	{% if page.last > 0%}
+	<a href="{% url 'viewathlete:page' 1 %}">1</a>
+	...
+	<a href="{% url 'viewathlete:page' page.last%}"><</a>
+	{% endif %}
+	{% if page.next <= page.max %}
+	<a href="{% url 'viewathlete:page' page.next %}">></a>
+	...
+	<a href="{% url 'viewathlete:page' page.max %}">{{page.max}}</a>
+	{% endif %}
+	</p>
+
+{% else %}
+	<p>No rowers are available.</p>
+{% endif %}
+
+{% endblock %}

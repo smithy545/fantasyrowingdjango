@@ -1,0 +1,15 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main_block %}
+
+{% if league.can_draft %}
+
+{% else %}
+
+You cannot draft right now.
+
+{% endif %}
+
+{% endblock %}

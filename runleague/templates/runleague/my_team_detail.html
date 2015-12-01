@@ -1,0 +1,29 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main_block %}
+
+{% if user.team_set.first %}
+
+<h3>{{ team.name }}</h3>
+
+<h4>Athletes</h4>
+<ul>
+{% for athlete in team.athletes.all %}
+	<li><a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a></li>
+{% endfor %}
+</ul>
+{% if user.is_authenticated and user.team_set.first == team %}
+<p><a href="{% url 'runleague:team_edit' %}">Edit</a></p>
+{% endif %}
+<a href="{{referer}}">Back</a>
+
+{% else %}
+
+<p>You do not have a team right now.</p>
+<a href="{% url 'runleague:make_team' %}">Join a league</a>
+
+{% endif %}
+
+{% endblock %}

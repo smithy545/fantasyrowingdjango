@@ -1,0 +1,39 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Athletes{% endblock %}
+
+{% block main_block %}
+
+<h2>{{ rower.first_name }} {{ rower.last_name }}</h2>
+
+<p>Athlete Rank: {{ rower.ranking }}</p>
+
+<ul>
+	{% if rower.age %}
+	<li>{{ rower.age }} years old</li>
+	{% endif %}
+	{% if rower.school %}
+	<li>School: {{ rower.school }}</li>
+	{% endif %}
+	{% if rower.height %}
+	<li>Height: {{ rower.get_height }} inches</li>
+	{% endif %}
+	{% if rower.weight %}
+	<li>Weight: {{ rower.weight }} lbs</li>
+	{% endif %}
+	{% if rower.hometown %}
+	<li>Hometown: {{ rower.hometown }}</li>
+	{% endif %}
+	{% if rower.high_school %}
+	<li>High School: {{rower.high_school}}</li>
+	{% endif %}
+	{% if rower.major %}
+	<li>Major: {{ rower.major }}</li>
+	{% endif %}
+	{% if rower.side %}
+	<li>Side: {{ rower.side }}</li>
+	{% endif %}
+</ul>
+<a href="{{referer}}">Back</a>
+
+{% endblock %}

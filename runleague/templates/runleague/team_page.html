@@ -1,0 +1,31 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main_block %}
+
+{% if team_list %}
+<ul>
+	{% for team in team_list %}
+	<li><a href="{% url 'runleague:team_detail' team.id %}">{{team.name}}</a></li>
+	{% endfor %}
+</ul>
+
+<p style="font-size:20;">
+{% if page.last > 0%}
+<a href="{% url 'runleague:team_page' 1%}">1</a>
+...
+<a href="{% url 'runleague:team_page' page.last %}"><</a>
+{% endif %}
+{% if page.next <= page.max %}
+<a href="{% url 'runleague:team_page' page.next %}">></a>
+...
+<a href="{% url 'runleague:team_page' page.max%}">{{page.max}}</a>
+{% endif %}
+</p>
+
+{% else %}
+<p>No teams are available.</p>
+{% endif %}
+
+{% endblock %}
