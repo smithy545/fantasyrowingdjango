@@ -9,11 +9,20 @@
 <h3>{{ team.name }}</h3>
 
 <h4>Athletes</h4>
-<ul>
+<table border='0'>
+<tr><th>#</th><th>School</th><th>Athlete</th><th>Height</th><th>Weight</th><th>Hometown</th><th>High School</th></tr>
 {% for athlete in team.athletes.all %}
-	<li><a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a></li>
+	<tr>
+	<td>{{forloop.counter0|add:"1"}}</td>
+	<td>{{athlete.school}}</td>
+	<td><a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a></td>
+	<td>{{athlete.height}}</td>
+	<td>{{athlete.weight}}</td>
+	<td>{{athlete.hometown}}</td>
+	<td>{{athlete.high_school}}</td>
+	</tr>
 {% endfor %}
-</ul>
+</table>
 {% if user.is_authenticated and user.team_set.first == team %}
 <p><a href="{% url 'runleague:team_edit' %}">Edit</a></p>
 {% endif %}

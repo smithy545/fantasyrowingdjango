@@ -9,11 +9,16 @@
 <h3>{{ league.name }}</h3>
 
 <h4>Teams</h4>
-<ul>
+<table border='0'>
+<tr><th>#</th><th>Team</th><th>User</th></tr>
 {% for team in league.team_set.all %}
-	<li><a href="{% url 'runleague:team_detail' team.id %}">{{ team }}</a></li>
+	<tr>
+	<td>{{forloop.counter0|add:"1"}}</td>
+	<td>{{team.name}}</td>
+	<td>{{team.user}}</td>
+	</tr>
 {% endfor %}
-</ul>
+</table>
 {% if user.is_authenticated and user.league_set.first == league %}
 <p><a href="{% url 'runleague:team_edit' %}">Edit</a></p>
 {% endif %}
