@@ -4,11 +4,17 @@ from django.core.urlresolvers import reverse
 from django.views import generic
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
 import collections
 
 # Create your views here.
 from .models import *
 from .forms import *
+
+def has_team(user):
+	if hasattr(user, 'team_set'):
+		return len(user.team_set.all()) > 0
+	return False
 
 class IndexView(generic.TemplateView):
 	template_name = 'runleague/about.html'
@@ -46,21 +52,13 @@ def team_page(request, page_id):
 	context = {'team_list':team_list, 'page':page}
 	return render(request, 'runleague/team_page.html', context)
 	
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_edit(request):
 	team = request.user.team_set.first()
-	schools = Athlete.objects.order_by().values('school').distinct()
-	not_added = {}
-	for school in schools:
-		temp = Athlete.objects.filter(school=school['school'])
-		not_added[school['school']] = []
-		for athlete in temp:
-			if not (athlete in team.league.taken_athletes()):
-				not_added[school['school']].append(athlete)
-	not_added = collections.OrderedDict(sorted(not_added.items()))
-	
-	context = {'team':team, 'not_added':not_added}
+	context = {'team':team}
 	return render(request, 'runleague/team_edit.html', context)
 
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_add_player(request):
 	team = request.user.team_set.first()
 	schools = Athlete.objects.order_by().values('school').distinct()
@@ -76,6 +74,7 @@ def team_add_player(request):
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_add_player.html', context)
 
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_remove_player(request):
 	team = request.user.team_set.first()
 	schools = Athlete.objects.order_by().values('school').distinct()
@@ -90,7 +89,8 @@ def team_remove_player(request):
 	
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_remove_player.html', context)
-	
+
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_trade_player(request):
 	team = request.user.team_set.first()
 	schools = Athlete.objects.order_by().values('school').distinct()
@@ -105,7 +105,8 @@ def team_trade_player(request):
 	
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_trade_player.html', context)
-	
+
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def athlete_add(request, athlete_id):
 	team = request.user.team_set.first()
 	athlete = Athlete.objects.get(pk=athlete_id)
@@ -123,7 +124,8 @@ def athlete_add(request, athlete_id):
 	
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_edit.html', context)
-	
+
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def athlete_remove(request, athlete_id):
 	team = request.user.team_set.first()
 	athlete = Athlete.objects.get(pk=athlete_id)
@@ -185,7 +187,6 @@ def league_detail(request, league_id):
 	context = {'league':league, 'referer':referer}
 	return render(request, 'runleague/league_detail.html', context)
 
-	
 def my_league_detail(request):
 	if hasattr(request.user, 'members'):
 		league = request.user.members.first()
