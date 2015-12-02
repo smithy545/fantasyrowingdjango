@@ -1,0 +1,14 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main_block %}
+
+<p>Current Name: {{ team.name }}</p>
+<form action="{% url 'runleague:team_edit_name' %}" method="POST">
+{{form.as_p}}
+{% csrf_token %}
+<input type="submit" value="Submit">
+</form>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
@@ -14,6 +14,11 @@ from .forms import *
 def has_team(user):
 	if hasattr(user, 'team_set'):
 		return len(user.team_set.all()) > 0
+	return False
+
+def owns_league(user):
+	if hasattr(user, 'owner'):
+		return len(user.owner.all()) > 0
 	return False
 
 class IndexView(generic.TemplateView):
@@ -99,6 +104,19 @@ def team_trade_athlete(request):
 	return render(request, 'runleague/team_trade_athlete.html', {'form':form})
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
+def team_edit_name(request):
+	if request.method == "GET":
+		form = EditNameForm()
+	elif request.method == "POST":
+		form = EditNameForm(request.POST)
+		if form.is_valid():
+			t = request.user.team_set.first()
+			t.name = form.cleaned_data['name']
+			t.save()
+			return redirect('/runleague/editteam')
+	return render(request, 'runleague/team_edit_name.html', {'form':form, 'team':request.user.team_set.first()})
+	
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def athlete_add(request, athlete_id):
 	team = request.user.team_set.first()
 	athlete = Athlete.objects.get(pk=athlete_id)
@@ -126,10 +144,6 @@ def athlete_remove(request, athlete_id):
 	not_added = team.league.available_athletes()
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_edit.html', context)
-
-@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
-def athlete_trade(request, athlete1_id, athlete2_id):
-	return render(request, 'runleague/team_edit.html', {})
 
 def athlete_detail(request, athlete_id):
 	rower = get_object_or_404(Athlete, pk=athlete_id)
@@ -192,6 +206,18 @@ def my_league_detail(request):
 	context = {'league':league, 'referer':referer}
 	return render(request, 'runleague/league_detail.html', context)
 
+@user_passes_test(owns_league, login_url='/runleague/league_detail', redirect_field_name=None)
+def league_edit(request):
+	league = request.user.owner.first()
+	referer = u'/' + u'/'.join(request.META.get('HTTP_REFERER').split('/')[3:])
+	return render(request, 'runleague/league_edit.html', {'league':league, 'referer':referer})
+
+@user_passes_test(owns_league, login_url='/runleague/league_detail', redirect_field_name=None)
+def league_kick_user(request, user_id):
+	u = User.objects.get(pk=user_id)
+	request.user.owner.first().members.remove(u)
+	return render(request, 'runleague/user_kicked.html', {'user':u})
+	
 def make_team(request):
 	if request.method == 'GET':
 		form = ChooseLeagueForm()

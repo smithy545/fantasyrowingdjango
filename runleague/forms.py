@@ -21,7 +21,7 @@ class SignupForm(UserCreationForm):
 		return user
 
 class ChooseLeagueForm(forms.Form):
-	teamname = forms.CharField(max_length=100)
+	teamname = forms.CharField(label="Team name", max_length=100)
 	def __init__(self, *args, **kwargs):
 		super(ChooseLeagueForm, self).__init__(*args, **kwargs)
 		openpks = [l.pk for l in League.objects.open_leagues()]
@@ -39,3 +39,6 @@ class TradePlayerForm(forms.Form):
 		self.fields['otherusers'] = forms.ChoiceField(label="Trade with", choices=[(u, u.username) for u in user.members.first().members.all()])
 		self.fields['yourathletes'] = forms.MultipleChoiceField(label="Trade", choices=[(a,a) for a in user.team_set.first().athletes.all()])
 		#self.fields['theirathletes'] = forms.MultipleChoiceField(label="For", choices=[(a,a) for a in user.members.first().athletes.all()])
+
+class EditNameForm(forms.Form):
+	name = forms.CharField(label = "New name", max_length=100)

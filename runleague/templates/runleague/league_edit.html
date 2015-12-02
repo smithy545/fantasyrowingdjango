@@ -4,21 +4,22 @@
 
 {% block main_block %}
 
-{% if user.members.first %}
+{% if user.owner.first %}
 
 <h3>{{ league.name }}</h3>
-{% if user.owner.first == league %}
-<a href="{% url 'runleague:league_edit' %}">Edit league..</a>
-{% endif %}
+
 <h4>Teams</h4>
 <table border='0'>
-<tr><th>#</th><th>Team</th><th>User</th></tr>
+<tr><th>#</th><th>Team</th><th>User</th><th></th></tr>
 {% for u in league.members.all %}
+	{% if u != user %}
 	<tr>
 	<td>{{forloop.counter0|add:"1"}}</td>
 	<td>{{u.team_set.first.name}}</td>
 	<td>{{u}}</td>
+	<td><a href="{% url 'runleague:league_kick_user' u.id %}">Kick</a>
 	</tr>
+	{% endif %}
 {% endfor %}
 </table>
 
