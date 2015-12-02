@@ -216,8 +216,9 @@ def league_edit(request):
 def league_kick_user(request, user_id):
 	u = User.objects.get(pk=user_id)
 	request.user.owner.first().members.remove(u)
+	u.team_set.first().delete()
 	return render(request, 'runleague/user_kicked.html', {'user':u})
-	
+
 def make_team(request):
 	if request.method == 'GET':
 		form = ChooseLeagueForm()
