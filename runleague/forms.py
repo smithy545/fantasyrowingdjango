@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import League, User
+from collections import OrderedDict
 
 class LoginForm(forms.Form):
 	username = forms.CharField(max_length=100)
@@ -20,10 +21,12 @@ class SignupForm(UserCreationForm):
 		return user
 
 class ChooseLeagueForm(forms.Form):
-	openpks = [l.pk for l in League.objects.open_leagues()]
-	league = forms.ModelChoiceField(queryset=League.objects.filter(pk__in=openpks))
 	teamname = forms.CharField(max_length=100)
-	
+	def __init__(self, *args, **kwargs):
+		super(ChooseLeagueForm, self).__init__(*args, **kwargs)
+		openpks = [l.pk for l in League.objects.open_leagues()]
+		self.fields = OrderedDict([('league',forms.ModelChoiceField(queryset=League.objects.filter(pk__in=openpks))),('teamname',self.fields['teamname'])])
+		
 class LeagueForm(forms.ModelForm):
 	class Meta:
 		model = League
