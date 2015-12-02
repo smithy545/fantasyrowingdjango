@@ -22,11 +22,23 @@ class Athlete(models.Model):
 	def get_height(self):
 		return unicode(int(self.height)/12) + "'" + unicode(int(self.height)%12) + '"'
 
+class LeagueManager(models.Manager):
+	def open_leagues(self):
+		openleagues = []
+		for l in League.objects.all():
+			if l.open and len(l.members.all()) < l.size:
+				openleagues.append(l)
+				
+		return openleagues
+		
 class League(models.Model):
 	name = models.CharField(max_length=200)
 	members = models.ManyToManyField(User, related_name='members')
 	owner = models.ForeignKey(User, related_name='owner')
-	leaguesize = models.IntegerField(default=8)
+	size = models.IntegerField(default=8, choices=[(6,6),(8,8),(10,10)])
+	open = models.BooleanField(default=True)
+	
+	objects = LeagueManager()
 
 	def __unicode__(self):
 		return unicode(self.name)
@@ -39,6 +51,7 @@ class League(models.Model):
 		for team in self.team_set.all():
 			athletes += team.athletes.all()
 		return athletes
+
 
 class Team(models.Model):
 	user = models.ForeignKey(User)

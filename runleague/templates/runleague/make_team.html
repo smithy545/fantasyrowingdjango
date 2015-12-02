@@ -3,7 +3,7 @@
 {% block title %}Create Team{% endblock %}
 
 {% block main_block %}
-
+{{temp}}
 {% if user.is_authenticated %}
 	{% if user.league_set.first %}
 	<p>You are in the {{user.league}} league.</p>

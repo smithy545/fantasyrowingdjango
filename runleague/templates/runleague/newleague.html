@@ -8,7 +8,7 @@
 	{% if user.members.first %}
 	<p>You are already in the {{user.league}} league.</p>
 	{% else%}
-	<h2>New League</h2>
+	<h3>New League</h3>
 	<form action='newleague' method='post'>
 		{% csrf_token %}
 		{{form.as_p}}

@@ -201,9 +201,8 @@ def make_team(request):
 	elif request.method == 'POST':
 		form = ChooseLeagueForm(request.POST)
 		if form.is_valid():
-			league = form.cleaned_data.get('league')
+			l = form.cleaned_data.get('league')
 			teamname = form.cleaned_data.get('teamname')
-			l = League.objects.get(pk=league)
 			request.user.team_set.add(Team(user = request.user, name=teamname, league=l))
 			request.user.members.add(l)
 			return render(request, 'runleague/make_team_success.html', {})
@@ -211,13 +210,12 @@ def make_team(request):
 
 def new_league(request):
 	if request.method == 'GET':
-		form = NewLeagueForm()
+		form = LeagueForm()
 	elif request.method == 'POST':
-		form = NewLeagueForm(request.POST)
+		form = LeagueForm(request.POST)
 		if form.is_valid():
-			leaguename = form.cleaned_data.get('leaguename')
-			leaguesize = form.cleaned_data.get('leaguesize')
-			l = League(name=leaguename, leaguesize=leaguesize, owner=request.user)
+			l = form.save(commit=False)
+			l.owner = request.user
 			l.save()
 			request.user.members.add(l)
 			request.user.team_set.add(Team(user = request.user, name="Team " + str(request.user.username), league=l))

@@ -20,14 +20,14 @@ class SignupForm(UserCreationForm):
 		return user
 
 class ChooseLeagueForm(forms.Form):
+	openpks = [l.pk for l in League.objects.open_leagues()]
+	league = forms.ModelChoiceField(queryset=League.objects.filter(pk__in=openpks))
 	teamname = forms.CharField(max_length=100)
-	def __init__(self, *args, **kwargs):
-		super(self.__class__,self).__init__(*args, **kwargs)
-		league = forms.ChoiceField(choices = [(l.pk,l) for l in League.objects.all() if len(l.members.all()) < l.leaguesize])
 	
-class NewLeagueForm(forms.Form):
-	leaguename = forms.CharField(label='Title', max_length=100)
-	leaguesize = forms.ChoiceField(label='Size', choices=[(6,6),(8,8),(10,10)])
+class LeagueForm(forms.ModelForm):
+	class Meta:
+		model = League
+		fields = ['name', 'size']
 
 class TradePlayerForm(forms.Form):
 	otheruser = forms.ChoiceField(choices = ())
