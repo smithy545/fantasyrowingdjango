@@ -1,0 +1,27 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main_block %}
+
+<h2>{{ team.name }}</h2>
+
+<h3>Add</h3>
+{% for school, athletes in not_added.iteritems %}
+<h4>{{school}}</h4>
+<ul>
+	{% for athlete in athletes %}
+		<li>
+		<a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a>
+		<form action="{% url 'runleague:athlete_add' athlete.id %}" method="POST">
+		<input type='submit' value='Add'>
+		{% csrf_token %}
+		</form>
+		</li>
+	{% endfor %}
+</ul>
+{% endfor %}
+
+<a href="{% url 'runleague:team_edit'%}">Back</a>
+
+{% endblock %}

@@ -29,7 +29,10 @@ def team_detail(request, team_id):
 	return render(request, 'runleague/team_detail.html', context)
 
 def my_team_detail(request):
-	team = request.user.team_set.first()
+	if request.user.is_authenticated():
+		team = request.user.team_set.first()
+	else:
+		team = None
 	referer = u'/' + u'/'.join(request.META.get('HTTP_REFERER').split('/')[3:])
 	context = {'team':team, 'referer':referer}
 	return render(request, 'runleague/team_detail.html', context)
@@ -58,6 +61,51 @@ def team_edit(request):
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_edit.html', context)
 
+def team_add_player(request):
+	team = request.user.team_set.first()
+	schools = Athlete.objects.order_by().values('school').distinct()
+	not_added = {}
+	for school in schools:
+		temp = Athlete.objects.filter(school=school['school'])
+		not_added[school['school']] = []
+		for athlete in temp:
+			if not (athlete in team.league.taken_athletes()):
+				not_added[school['school']].append(athlete)
+	not_added = collections.OrderedDict(sorted(not_added.items()))
+	
+	context = {'team':team, 'not_added':not_added}
+	return render(request, 'runleague/team_add_player.html', context)
+
+def team_remove_player(request):
+	team = request.user.team_set.first()
+	schools = Athlete.objects.order_by().values('school').distinct()
+	not_added = {}
+	for school in schools:
+		temp = Athlete.objects.filter(school=school['school'])
+		not_added[school['school']] = []
+		for athlete in temp:
+			if not (athlete in team.league.taken_athletes()):
+				not_added[school['school']].append(athlete)
+	not_added = collections.OrderedDict(sorted(not_added.items()))
+	
+	context = {'team':team, 'not_added':not_added}
+	return render(request, 'runleague/team_remove_player.html', context)
+	
+def team_trade_player(request):
+	team = request.user.team_set.first()
+	schools = Athlete.objects.order_by().values('school').distinct()
+	not_added = {}
+	for school in schools:
+		temp = Athlete.objects.filter(school=school['school'])
+		not_added[school['school']] = []
+		for athlete in temp:
+			if not (athlete in team.league.taken_athletes()):
+				not_added[school['school']].append(athlete)
+	not_added = collections.OrderedDict(sorted(not_added.items()))
+	
+	context = {'team':team, 'not_added':not_added}
+	return render(request, 'runleague/team_trade_player.html', context)
+	
 def athlete_add(request, athlete_id):
 	team = request.user.team_set.first()
 	athlete = Athlete.objects.get(pk=athlete_id)
@@ -127,11 +175,8 @@ def sign_up(request):
 	elif request.method == 'POST':
 		form = SignupForm(request.POST)
 		if form.is_valid():
-			username = form.cleaned_data.get('username')
-			password = form.cleaned_data.get('password')
-			email = form.cleaned_data.get('email')
-			user = User.objects.create_user(username, email, password)
-			return render(request, 'runleague/signin.html', {'form':LoginForm()})
+			user = form.save()
+			return render(request, 'runleague/signin.html', {'form':LoginForm(),'message':str(user)+" successfully created"})
 	return render(request, 'runleague/signup.html', {'form':form})
 
 def league_detail(request, league_id):

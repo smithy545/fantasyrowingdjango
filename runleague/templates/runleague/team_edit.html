@@ -6,35 +6,10 @@
 
 <h2>{{ team.name }}</h2>
 
-<h3>Remove</h3>
-<ul>
-{% for athlete in team.athletes.all %}
-	<li>
-	<a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a>
-	<form action="{% url 'runleague:athlete_remove' athlete.id %}" method="POST">
-	<input type='submit' value='Remove'>
-	{% csrf_token %}
-	</form>
-	</li>
-{% endfor %}
-</ul>
+<a href="{% url 'runleague:team_add_player' %}">Add Players</a></br>
+<a href="{% url 'runleague:team_remove_player' %}">Remove Players</a></br>
+<a href="{% url 'runleague:team_trade_player' %}">Trade Players</a></br>
 
-<h3>Add</h3>
-{% for school, athletes in not_added.iteritems %}
-<h4>{{school}}</h4>
-<ul>
-	{% for athlete in athletes %}
-		<li>
-		<a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a>
-		<form action="{% url 'runleague:athlete_add' athlete.id %}" method="POST">
-		<input type='submit' value='Add'>
-		{% csrf_token %}
-		</form>
-		</li>
-	{% endfor %}
-</ul>
-{% endfor %}
-
-<a href="{% url 'runleague:team_detail' team.id%}">Back</a>
+<a href="{% url 'runleague:my_team_detail'%}">Back</a>
 
 {% endblock %}

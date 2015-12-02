@@ -1,0 +1,24 @@
+{% extends 'runleague/base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main_block %}
+
+<h2>{{ team.name }}</h2>
+
+<h3>Remove</h3>
+<ul>
+{% for athlete in team.athletes.all %}
+	<li>
+	<a href="{% url 'runleague:athlete_detail' athlete.id %}">{{athlete}}</a>
+	<form action="{% url 'runleague:athlete_remove' athlete.id %}" method="POST">
+	<input type='submit' value='Remove'>
+	{% csrf_token %}
+	</form>
+	</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'runleague:team_edit' %}">Back</a>
+
+{% endblock %}
