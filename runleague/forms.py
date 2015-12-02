@@ -33,4 +33,9 @@ class LeagueForm(forms.ModelForm):
 		fields = ['name', 'size']
 
 class TradePlayerForm(forms.Form):
-	otheruser = forms.ChoiceField(choices = ())
+	def __init__(self, user, *args, **kwargs):
+		self.user = user
+		super(TradePlayerForm, self).__init__(*args, **kwargs)
+		self.fields['otherusers'] = forms.ChoiceField(label="Trade with", choices=[(u, u.username) for u in user.members.first().members.all()])
+		self.fields['yourathletes'] = forms.MultipleChoiceField(label="Trade", choices=[(a,a) for a in user.team_set.first().athletes.all()])
+		#self.fields['theirathletes'] = forms.MultipleChoiceField(label="For", choices=[(a,a) for a in user.members.first().athletes.all()])

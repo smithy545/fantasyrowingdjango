@@ -59,7 +59,7 @@ def team_edit(request):
 	return render(request, 'runleague/team_edit.html', context)
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
-def team_add_player(request):
+def team_add_athlete(request):
 	team = request.user.team_set.first()
 	schools = Athlete.objects.order_by().values('school').distinct()
 	not_added = {}
@@ -72,10 +72,10 @@ def team_add_player(request):
 	not_added = collections.OrderedDict(sorted(not_added.items()))
 	
 	context = {'team':team, 'not_added':not_added}
-	return render(request, 'runleague/team_add_player.html', context)
+	return render(request, 'runleague/team_add_athlete.html', context)
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
-def team_remove_player(request):
+def team_remove_athlete(request):
 	team = request.user.team_set.first()
 	schools = Athlete.objects.order_by().values('school').distinct()
 	not_added = {}
@@ -88,23 +88,15 @@ def team_remove_player(request):
 	not_added = collections.OrderedDict(sorted(not_added.items()))
 	
 	context = {'team':team, 'not_added':not_added}
-	return render(request, 'runleague/team_remove_player.html', context)
+	return render(request, 'runleague/team_remove_athlete.html', context)
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
-def team_trade_player(request):
-	team = request.user.team_set.first()
-	schools = Athlete.objects.order_by().values('school').distinct()
-	not_added = {}
-	for school in schools:
-		temp = Athlete.objects.filter(school=school['school'])
-		not_added[school['school']] = []
-		for athlete in temp:
-			if not (athlete in team.league.taken_athletes()):
-				not_added[school['school']].append(athlete)
-	not_added = collections.OrderedDict(sorted(not_added.items()))
-	
-	context = {'team':team, 'not_added':not_added}
-	return render(request, 'runleague/team_trade_player.html', context)
+def team_trade_athlete(request):
+	if request.method == "GET":
+		form = TradePlayerForm(request.user)
+	elif request.method == "POST":
+		form = TradePlayerForm(request.user, request.POST)
+	return render(request, 'runleague/team_trade_athlete.html', {'form':form})
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def athlete_add(request, athlete_id):
@@ -134,7 +126,11 @@ def athlete_remove(request, athlete_id):
 	not_added = team.league.available_athletes()
 	context = {'team':team, 'not_added':not_added}
 	return render(request, 'runleague/team_edit.html', context)
-	
+
+@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
+def athlete_trade(request, athlete1_id, athlete2_id):
+	return render(request, 'runleague/team_edit.html', {})
+
 def athlete_detail(request, athlete_id):
 	rower = get_object_or_404(Athlete, pk=athlete_id)
 	referer = u'/' + u'/'.join(request.META.get('HTTP_REFERER').split('/')[3:])

@@ -7,8 +7,11 @@
 <h2>{{ team.name }}</h2>
 
 <h3>Trade</h3>
-<form
-
+<form action="{% url 'runleague:athlete_trade' %}" method="POST">
+	{{form.as_p}}
+	<input type='submit' value='Trade'>
+	{% csrf_token %}
+</form>
 <a href="{% url 'runleague:team_edit' %}">Back</a>
 
 {% endblock %}
