@@ -11,7 +11,6 @@ urlpatterns = [
     url(r'^(?P<page_id>[0-9]+)/$', views.team_page, name='team_page'),
 	url(r'^editteam/add/(?P<athlete_id>[0-9]+)/$', views.athlete_add, name='athlete_add'),
 	url(r'^editteam/remove/(?P<athlete_id>[0-9]+)/$', views.athlete_remove, name='athlete_remove'),
-	url(r'^editteam', views.team_edit, name='team_edit'),
 	url(r'^editname', views.team_edit_name, name='team_edit_name'),
 	url(r'^addathlete', views.team_add_athlete, name='team_add_athlete'),
 	url(r'^removeathlete', views.team_remove_athlete, name='team_remove_athlete'),

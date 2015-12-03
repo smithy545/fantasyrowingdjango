@@ -56,12 +56,6 @@ def team_page(request, page_id):
 	page = {'next':next_page, 'last':last_page, 'max':max_page, 'id':page_id}
 	context = {'team_list':team_list, 'page':page}
 	return render(request, 'runleague/team_page.html', context)
-	
-@user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
-def team_edit(request):
-	team = request.user.team_set.first()
-	context = {'team':team}
-	return render(request, 'runleague/team_edit.html', context)
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_add_athlete(request):

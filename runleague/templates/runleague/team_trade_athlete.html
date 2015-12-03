@@ -43,6 +43,6 @@ function get_athletes(){
 	<input type='submit' value='Trade'>
 	{% csrf_token %}
 </form>
-<a href="{% url 'runleague:team_edit' %}">Back</a>
+<a href="{% url 'runleague:my_team_detail' %}">Back</a>
 
 {% endblock %}

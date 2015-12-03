@@ -8,6 +8,8 @@
 
 <h3>{{ team.name }}</h3>
 
+<a href="{% url 'runleague:team_edit_name' %}">Edit name</a></br>
+
 <h4>Athletes</h4>
 <table border='0'>
 <tr><th>#</th><th>School</th><th>Athlete</th><th>Height</th><th>Weight</th><th>Hometown</th><th>High School</th></tr>
@@ -24,7 +26,11 @@
 {% endfor %}
 </table>
 {% if user.is_authenticated and user.team_set.first == team %}
-<p><a href="{% url 'runleague:team_edit' %}">Edit</a></p>
+</br>
+<a href="{% url 'runleague:team_add_athlete' %}">Add Players</a></br>
+<a href="{% url 'runleague:team_remove_athlete' %}">Remove Players</a></br>
+<a href="{% url 'runleague:team_trade_athlete' %}">Trade Players</a></br>
+</br>
 {% endif %}
 <a href="{{referer}}">Back</a>
 
