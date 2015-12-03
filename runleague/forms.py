@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import League, User
+from .models import *
 from collections import OrderedDict
 
 class LoginForm(forms.Form):
@@ -36,9 +36,9 @@ class TradePlayerForm(forms.Form):
 	def __init__(self, user, *args, **kwargs):
 		self.user = user
 		super(TradePlayerForm, self).__init__(*args, **kwargs)
-		self.fields['otherusers'] = forms.ChoiceField(label="Trade with", choices=[(u, u.username) for u in user.members.first().members.all()])
+		self.fields['teams'] = forms.ChoiceField(label="Trade with", widget=forms.Select(attrs={'onchange':'get_athletes();'}), choices=[(u.team_set.first().id, u.team_set.first().name) for u in user.members.first().members.all() if u != self.user])
 		self.fields['yourathletes'] = forms.MultipleChoiceField(label="Trade", choices=[(a,a) for a in user.team_set.first().athletes.all()])
-		#self.fields['theirathletes'] = forms.MultipleChoiceField(label="For", choices=[(a,a) for a in user.members.first().athletes.all()])
+		self.fields['theirathletes'] = forms.MultipleChoiceField(label="For", choices=[(a,a) for a in Athlete.objects.all()])
 
 class EditNameForm(forms.Form):
 	name = forms.CharField(label = "New name", max_length=100)

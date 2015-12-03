@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
-import collections
+import collections, simplejson
 
 # Create your views here.
 from .models import *
@@ -98,11 +98,24 @@ def team_remove_athlete(request):
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_trade_athlete(request):
 	if request.method == "GET":
-		form = TradePlayerForm(request.user)
+		form = TradePlayerForm(request.user) 
 	elif request.method == "POST":
 		form = TradePlayerForm(request.user, request.POST)
+		return render(request, 'runleague/team_trade_sent.html', {})
 	return render(request, 'runleague/team_trade_athlete.html', {'form':form})
 
+def team_trade_get(request, teamid):
+	if request.GET.get('teamid'):
+		teamid = request.GET.get('teamid')
+		athletes = [unicode(a) for a in Team.objects.get(pk=teamid).athletes.all()]
+	else:
+		athletes = None
+	
+	if not athletes:
+		athletes = ["No athletes"]
+
+	return HttpResponse(simplejson.dumps(athletes))
+	
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def team_edit_name(request):
 	if request.method == "GET":

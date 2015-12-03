@@ -4,7 +4,8 @@
 	<title>Fantasy Rowing - {% block title %}Title{% endblock %}</title>
 	{% load staticfiles %}
 	<link rel="stylesheet" type="text/css" href="{% static 'runleague/mainstylesheet.css' %}" />
-</head>
+	{% block extra_header %}{% endblock %}
+	</head>
 <body>
 	<div id="top-bar">
 		{% if user.is_authenticated %}
