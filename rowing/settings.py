@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'runleague',
+    'postman',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,6 +53,8 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'rowing.urls'
+
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
 TEMPLATES = [
     {

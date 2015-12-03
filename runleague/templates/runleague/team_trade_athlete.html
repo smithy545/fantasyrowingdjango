@@ -2,7 +2,7 @@
 
 {% block title %}Trade{% endblock %}
 
-{% block extra_header %}
+{% block extrahead %}
 {% load staticfiles %}
 <script type="text/javascript" src="{% static 'runleague/jquery-1.11.13.js' %}"></script>
 <script type="text/javascript">
@@ -32,7 +32,7 @@ function get_athletes(){
 </script>
 {% endblock %}
 
-{% block main_block %}
+{% block content %}
 
 <h2>{{ team.name }}</h2>
 

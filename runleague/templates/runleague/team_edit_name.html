@@ -2,7 +2,7 @@
 
 {% block title %}Team{% endblock %}
 
-{% block main_block %}
+{% block content %}
 
 <p>Current Name: {{ team.name }}</p>
 <form action="{% url 'runleague:team_edit_name' %}" method="POST">

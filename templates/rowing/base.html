@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang='en' xml:lang='en'>
 <head>
-	<title>Fantasy Rowing</title>
-	<link rel="stylesheet" type="text/css" href="mainstylesheet.css">
-	<script src="functions.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		setCookie("logged-in", "tdrue", 10);
-	</script>
-</head>
+	<title>Fantasy Rowing - {% block title %}Title{% endblock %}</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'runleague/mainstylesheet.css' %}" />
+	{% block extrahead %}{% endblock %}
+	</head>
 <body>
 	<div id="top-bar">
 		{% if user.is_authenticated %}
-			<p>{{ user.username }}</p>
+		<p>{{ user.username }} <a href="{% url 'runleague:sign_out' %}">Sign out</a></p>
 		{% else %}
-			<a href="{% url 'runleague:sign_in' %}">Sign in</a>
+		<a href="{% url 'runleague:sign_in' %}">Sign in</a>
 		{% endif %}
 	</div>
 	<div id="title-bar">
@@ -22,27 +20,24 @@
 	<div id="nav-container">
 		<ul class="nav-bar">
 			<li>
-				<a href="index">Home</a>
+				<a href="{% url 'runleague:index' %}">Home</a>
 			</li>
 			<li>
-				<a href="about">About</a>
+				<a href="{% url 'runleague:about' %}">About</a>
 			</li>
 			<li>
-				<a href="team">My Team</a>
+				<a href="{% url 'runleague:my_team_detail' %}">Team</a>
+			</li>
+			<li>
+				<a href="{% url 'runleague:my_league_detail' %}">League</a>
+			</li>
+			<li>
+				<a href="{% url 'runleague:draft' %}">Draft Team</a>
 			</li>
 		</ul>
 	</div>
 	<div id="main">
-	{% if team_list %}
-		<ul>
-		{% for team in team_list %}
-			<li><a href="{% url 'runleague:team_detail' team.id %}">{{team.name}}</a></li>
-		{% endfor %}
-		</ul>
-		<a href="{% url 'runleague:team_page' 1 %}">Next Page</a>
-	{% else %}
-		<p>No teams are available.</p>
-	{% endif %}
+	{% block content %}Default main content{% endblock %}
 	</div>
 </body>
 <html>
