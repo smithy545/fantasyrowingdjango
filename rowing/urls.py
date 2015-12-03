@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^runleague/', include('runleague.urls', namespace="runleague")),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^postman/', include('postman.urls', namespace="postman", app_name="postman")),
-    ]
+    url(r'^draft/', include('draft.urls', namespace="draft")),
+	]

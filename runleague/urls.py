@@ -26,5 +26,4 @@ urlpatterns = [
 	url(r'^kickuser/(?P<user_id>[0-9]+)/$', views.league_kick_user, name='league_kick_user'),
 	url(r'^maketeam', views.make_team, name='make_team'),
 	url(r'^newleague', views.new_league, name='new_league'),
-	url(r'^draft', views.draft, name='draft'),
     ]

@@ -140,7 +140,7 @@ def athlete_add(request, athlete_id):
 	not_added = collections.OrderedDict(sorted(not_added.items()))
 	
 	context = {'team':team, 'not_added':not_added}
-	return render(request, 'runleague/team_edit.html', context)
+	return render(request, 'runleague/team_detail.html', context)
 
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
 def athlete_remove(request, athlete_id):
@@ -150,7 +150,7 @@ def athlete_remove(request, athlete_id):
 		team.athletes.remove(athlete)
 	not_added = team.league.available_athletes()
 	context = {'team':team, 'not_added':not_added}
-	return render(request, 'runleague/team_edit.html', context)
+	return render(request, 'runleague/team_detail.html', context)
 
 def athlete_detail(request, athlete_id):
 	rower = get_object_or_404(Athlete, pk=athlete_id)

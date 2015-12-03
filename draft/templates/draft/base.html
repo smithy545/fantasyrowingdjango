@@ -1,12 +1,10 @@
-{% extends 'runleague/base.html' %}
-
-{% block title %}Trade{% endblock %}
+{% extends 'rowing/base.html' %}
 
 {% block extrahead %}
 {% load staticfiles %}
 <script type="text/javascript" src="{% static 'jquery-1.11.13.js' %}"></script>
 <script type="text/javascript">
-function get_athletes(){
+function draft(){
 	var xhttp;
 	if(window.XMLHttpRequest){
 		xhttp = new XMLHttpRequest();
@@ -32,17 +30,27 @@ function get_athletes(){
 </script>
 {% endblock %}
 
+{% block title %} Draft {% endblock %}
 {% block content %}
 
-<h2>{{ team.name }}</h2>
+{% if user.members.first.can_draft %}
 
-<h3>Trade</h3>
+<div id="draft-content">
+Draft Content
+</div>
 
-<form action="{% url 'runleague:team_trade_athlete' %}" method="POST">
-	{{form.as_p}}
-	<input type='submit' value='Trade'>
-	{% csrf_token %}
-</form>
-<a href="{% url 'runleague:my_team_detail' %}">Back</a>
+{% else %}
+
+{% if user.members.all %}
+
+The draft starts on {{user.members.first.draft_start_date}}
+
+{% else %}
+
+<p>You are not in a league right now.</p>
+<a href="{% url 'runleague:make_team' %}">Join a league</a>
+
+{% endif %}
+{% endif %}
 
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Athlete(models.Model):
@@ -21,7 +22,7 @@ class Athlete(models.Model):
 	
 	def get_height(self):
 		return unicode(int(self.height)/12) + "'" + unicode(int(self.height)%12) + '"'
-
+		
 class LeagueManager(models.Manager):
 	def open_leagues(self):
 		openleagues = []
@@ -37,6 +38,8 @@ class League(models.Model):
 	owner = models.ForeignKey(User, related_name='owner')
 	size = models.IntegerField(default=8, choices=[(6,6),(8,8),(10,10)])
 	open = models.BooleanField(default=True)
+	draft_start_date = models.DateTimeField()
+	draft_end_date = models.DateTimeField()
 	
 	objects = LeagueManager()
 
@@ -52,6 +55,11 @@ class League(models.Model):
 			athletes += team.athletes.all()
 		return athletes
 
+	@property
+	def can_draft(self):
+		if timezone.now() < self.draft_end_date and timezone.now() > self.draft_start_date:
+			return True
+		return False
 
 class Team(models.Model):
 	user = models.ForeignKey(User)

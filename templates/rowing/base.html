@@ -3,7 +3,7 @@
 <head>
 	<title>Fantasy Rowing - {% block title %}Title{% endblock %}</title>
 	{% load staticfiles %}
-	<link rel="stylesheet" type="text/css" href="{% static 'runleague/mainstylesheet.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'mainstylesheet.css' %}" />
 	{% block extrahead %}{% endblock %}
 	</head>
 <body>
@@ -32,7 +32,7 @@
 				<a href="{% url 'runleague:my_league_detail' %}">League</a>
 			</li>
 			<li>
-				<a href="{% url 'runleague:draft' %}">Draft Team</a>
+				<a href="{% url 'draft:main' %}">Draft Team</a>
 			</li>
 		</ul>
 	</div>

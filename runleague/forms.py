@@ -36,7 +36,7 @@ class TradePlayerForm(forms.Form):
 	def __init__(self, user, *args, **kwargs):
 		self.user = user
 		super(TradePlayerForm, self).__init__(*args, **kwargs)
-		self.fields['teams'] = forms.ChoiceField(label="Trade with", widget=forms.Select(attrs={'onchange':'get_athletes();'}), choices=[(u.team_set.first().id, u.team_set.first().name) for u in user.members.first().members.all() if u != self.user])
+		self.fields['teams'] = forms.ChoiceField(label="Trade with", widget=forms.Select(attrs={'onchange':'get_athletes();'}), choices=[(-1,"Choose Team")]+[(u.team_set.first().id, u.team_set.first().name) for u in user.members.first().members.all() if u != self.user])
 		self.fields['yourathletes'] = forms.MultipleChoiceField(label="Trade", choices=[(a,a) for a in user.team_set.first().athletes.all()])
 		self.fields['theirathletes'] = forms.MultipleChoiceField(label="For", choices=[(a,a) for a in Athlete.objects.all()])
 
