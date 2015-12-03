@@ -120,7 +120,7 @@ def team_edit_name(request):
 			t = request.user.team_set.first()
 			t.name = form.cleaned_data['name']
 			t.save()
-			return redirect('/runleague/editteam')
+			return redirect('/runleague/team')
 	return render(request, 'runleague/team_edit_name.html', {'form':form, 'team':request.user.team_set.first()})
 	
 @user_passes_test(has_team, login_url='/runleague/signin', redirect_field_name=None)
@@ -219,12 +219,27 @@ def league_edit(request):
 	referer = u'/' + u'/'.join(request.META.get('HTTP_REFERER').split('/')[3:])
 	return render(request, 'runleague/league_edit.html', {'league':league, 'referer':referer})
 
-@user_passes_test(owns_league, login_url='/runleague/league_detail', redirect_field_name=None)
+@user_passes_test(has_team, login_url='/runleague/league_detail', redirect_field_name=None)
 def league_kick_user(request, user_id):
 	u = User.objects.get(pk=user_id)
-	request.user.owner.first().members.remove(u)
-	u.team_set.first().delete()
-	return render(request, 'runleague/user_kicked.html', {'user':u})
+	l = request.user.members.first()
+
+	if u.id != request.user.id and l.owner != request.user.id:
+		return redirect("/runleague/league")
+	
+	if len(l.members.all()) <= 1:
+		l.delete()
+	elif l.owner == u:
+		l.members.remove(u)
+		l.owner = l.members.first()
+		l.save()
+	else:
+		l.members.remove(u)
+		l.save()
+
+	if u.team_set.first():
+		u.team_set.first().delete()
+	return render(request, 'runleague/user_kicked.html', {'user':u, 'league':l})
 
 def make_team(request):
 	if request.method == 'GET':

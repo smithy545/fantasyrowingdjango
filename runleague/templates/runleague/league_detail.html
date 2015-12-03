@@ -22,6 +22,10 @@
 {% endfor %}
 </table>
 
+</br>
+<a onclick="return confirm('Are you sure you want to leave your league?');" href="{% url 'runleague:league_kick_user' user.id %}">Leave league</a>
+</br>
+
 <a href="{{referer}}">Back</a>
 
 {% else %}
