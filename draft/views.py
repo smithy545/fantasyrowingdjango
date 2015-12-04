@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.serializers import serialize
 import simplejson
 
 def main(request):
@@ -7,4 +8,4 @@ def main(request):
 
 def league_get_available(request):
 	league = request.user.members.first()
-	return HttpResponse(simplejson.dumps([a.get_full_name() for a in league.available_athletes()]))
+	return HttpResponse(serialize('json', league.available_athletes()))

@@ -4,12 +4,61 @@
 {% load staticfiles %}
 <script type="text/javascript" src="{% static 'jquery-1.11.13.js' %}"></script>
 <script type="text/javascript">
+function convertHeader(key){
+	if(key == 'ranking'){
+		return '<td>Ranking</td>';
+	} else if(key == 'first_name') {
+		return '<td>First Name</td>';
+	} else if(key == 'last_name') {
+		return '<td>Last Name</td>';
+	} else if(key == 'weight') {
+		return '<td>Weight</td>';
+	} else if(key == 'hometown') {
+		return '<td>Hometown</td>';
+	} else if(key == 'age') {
+		return '';
+	} else if(key == 'school') {
+		return '<td>School</td>';
+	} else if(key == 'height') {
+		return '<td>Height</td>';
+	} else if(key == 'year') {
+		return '<td>Year</td>';
+	} else if(key == 'major') {
+		return '';
+	} else if(key == 'high_school') {
+		return '<td>High School</td>';
+	} else if(key == 'side') {
+		return '';
+	}
+}
+function validField(key) {
+	if(key == 'age' || key == 'major' || key == 'side')
+		return false;
+	return true;
+}
+function toFeetInches(inches) {
+	if(typeof inches == "number")
+		return parseInt(inches / 12) + "'" + inches % 12 + '"';
+	return inches;
+}
 function displayAthletes(athletes) {
 	document.getElementById("draft-content").innerHTML = "<table id='athlete_table'></table>";
 	table = $('table[id=athlete_table]');
-	table.append($('<tr><th>#</th><th>School</th><th>Athlete</th><th>Height</th><th>Weight</th><th>Hometown</th><th>High School</th></tr>'));
+	header = '<tr>';
+	for(var key in athletes[0]["fields"]){
+		header += convertHeader(key);
+	}
+	table.append($(header+'</tr>'));
 	for(var a in athletes) {
-		table.append($('<tr><td>'+athletes[a]+'</td></tr>'));
+		var row = '<tr>';
+		for(var key in athletes[a]["fields"]) {
+			if(validField(key)) {
+				if(key == 'height')
+					athletes[a]["fields"][key] = toFeetInches(athletes[a]["fields"][key]);
+				row += '<td>'+athletes[a]["fields"][key]+'</td>';
+			}
+		}
+		table.append($(row+'</tr>'));
 	}
 }
 
@@ -40,6 +89,10 @@ $(document).ready(getAthletes());
 
 {% if user.members.first.can_draft %}
 
+<div id="player-turn">
+
+
+</div>
 <div id="draft-content">
 Content loading...
 </div>
