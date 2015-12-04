@@ -20,6 +20,9 @@ class Athlete(models.Model):
 	def __unicode__(self):
 		return self.last_name + u", " + self.first_name
 	
+	def get_full_name(self):
+		return self.first_name + u" " + self.last_name
+	
 	def get_height(self):
 		return unicode(int(self.height)/12) + "'" + unicode(int(self.height)%12) + '"'
 		
@@ -36,7 +39,7 @@ class League(models.Model):
 	name = models.CharField(max_length=200)
 	members = models.ManyToManyField(User, related_name='members')
 	owner = models.ForeignKey(User, related_name='owner')
-	size = models.IntegerField(default=8, choices=[(6,6),(8,8),(10,10)])
+	size = models.IntegerField(default=10, choices=[(8,8),(10,10),(12,12)])
 	open = models.BooleanField(default=True)
 	draft_start_date = models.DateTimeField()
 	draft_end_date = models.DateTimeField()
@@ -45,7 +48,7 @@ class League(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.name)
-		
+	
 	def available_athletes(self):
 		return [a for a in Athlete.objects.all() if a not in self.taken_athletes()]
 	
@@ -57,7 +60,7 @@ class League(models.Model):
 
 	@property
 	def can_draft(self):
-		if timezone.now() < self.draft_end_date and timezone.now() > self.draft_start_date:
+		if timezone.now() < self.draft_end_date and timezone.now() > self.draft_start_date and len(self.members.all()) == self.size:
 			return True
 		return False
 

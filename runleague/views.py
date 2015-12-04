@@ -98,7 +98,7 @@ def team_trade_athlete(request):
 		return render(request, 'runleague/team_trade_sent.html', {})
 	return render(request, 'runleague/team_trade_athlete.html', {'form':form})
 
-def team_trade_get(request, teamid):
+def team_get_athletes(request, teamid):
 	if request.GET.get('teamid'):
 		teamid = request.GET.get('teamid')
 		athletes = [unicode(a) for a in Team.objects.get(pk=teamid).athletes.all()]

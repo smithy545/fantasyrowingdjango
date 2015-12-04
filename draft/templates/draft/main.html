@@ -1,0 +1,63 @@
+{% extends 'draft/base.html' %}
+
+{% block extrahead %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'jquery-1.11.13.js' %}"></script>
+<script type="text/javascript">
+function displayAthletes(athletes) {
+	document.getElementById("draft-content").innerHTML = "<table id='athlete_table'></table>";
+	table = $('table[id=athlete_table]');
+	table.append($('<tr><th>#</th><th>School</th><th>Athlete</th><th>Height</th><th>Weight</th><th>Hometown</th><th>High School</th></tr>'));
+	for(var a in athletes) {
+		table.append($('<tr><td>'+athletes[a]+'</td></tr>'));
+	}
+}
+
+function getAthletes() {
+	var xhttp;
+	if(window.XMLHttpRequest){
+		xhttp = new XMLHttpRequest();
+	} else {
+		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url = "/draft/get_athletes";
+	xhttp.open("GET", url, true);
+	xhttp.onreadystatechange = function() {
+		if(xhttp.readyState == 4 && xhttp.status == 200) {
+			var athletes = JSON.parse(xhttp.responseText);
+			displayAthletes(athletes);
+		}
+	};
+	xhttp.send();
+}
+$(document).ready(getAthletes());
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+{% if user.members.first.can_draft %}
+
+<div id="draft-content">
+Content loading...
+</div>
+
+{% else %}
+
+{% if user.members.all %}
+
+Your league is ineligible to draft right now(due to size or date).
+</br>
+The draft starts on {{user.members.first.draft_start_date}}
+
+{% else %}
+
+<p>You are not in a league right now.</p>
+<a href="{% url 'runleague:make_team' %}">Join a league</a>
+
+{% endif %}
+{% endif %}
+
+{% endblock %}

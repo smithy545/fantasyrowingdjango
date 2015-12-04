@@ -14,16 +14,16 @@ function get_athletes(){
 		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
-	var username = document.getElementById("id_teams").value;
-	var url = "/runleague/tradeathlete/get_athletes?teamid=" + escape(username);
+	var teamid = document.getElementById("id_teams").value;
+	var url = "/runleague/get_athletes?teamid=" + escape(teamid);
 	xhttp.open("GET", url, true);
 	xhttp.onreadystatechange = function() {
 		if(xhttp.readyState == 4 && xhttp.status == 200) {
-			var data = JSON.parse(xhttp.responseText);
+			var athletes = JSON.parse(xhttp.responseText);
 			select = $('select[id=id_theirathletes]');
 			select.find('option').remove();
-			for (var k in data) {
-				select.append($('<option value="'+data[k]+'">'+data[k]+'</option>'));
+			for (var a in athletes) {
+				select.append($('<option value="'+athletes[a]+'">'+athletes[a]+'</option>'));
 			}
 		}
 	};
