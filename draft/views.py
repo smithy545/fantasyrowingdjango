@@ -9,3 +9,8 @@ def main(request):
 def league_get_available(request):
 	league = request.user.members.first()
 	return HttpResponse(serialize('json', league.available_athletes()))
+
+def league_get_players(request):
+	league = request.user.members.first()
+	return HttpResponse(serialize('json', league.schedule.get_players()))
+	

@@ -263,6 +263,7 @@ def new_league(request):
 			l = form.save(commit=False)
 			l.owner = request.user
 			l.save()
+			Schedule(league=l, turn=0).save()
 			request.user.members.add(l)
 			request.user.team_set.add(Team(user = request.user, name="Team " + str(request.user.username), league=l))
 			context = {}

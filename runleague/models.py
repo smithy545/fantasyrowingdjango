@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
+from django.utils import timezone, tzinfo
+import pytz
 
 # Create your models here.
 class Athlete(models.Model):
@@ -17,6 +18,9 @@ class Athlete(models.Model):
 	side = models.CharField(max_length=200,null=True)
 	ranking = models.IntegerField(unique=True)
 
+	class Meta:
+		ordering = ['ranking']
+		
 	def __unicode__(self):
 		return self.last_name + u", " + self.first_name
 	
@@ -41,8 +45,7 @@ class League(models.Model):
 	owner = models.ForeignKey(User, related_name='owner')
 	size = models.IntegerField(default=10, choices=[(8,8),(10,10),(12,12)])
 	open = models.BooleanField(default=True)
-	draft_start_date = models.DateTimeField()
-	draft_end_date = models.DateTimeField()
+
 	
 	objects = LeagueManager()
 
@@ -59,16 +62,36 @@ class League(models.Model):
 		return athletes
 
 	@property
-	def can_draft(self):
-		if timezone.now() < self.draft_end_date and timezone.now() > self.draft_start_date and len(self.members.all()) == self.size:
-			return True
-		return False
-
+	def teams(self):
+		teams = []
+		for user in self.members.all():
+			teams.append(user.team_set.first())
+		return teams
+		
 class Team(models.Model):
 	user = models.ForeignKey(User)
 	name = models.CharField(max_length=200)
 	league = models.ForeignKey(League)
 	athletes = models.ManyToManyField(Athlete)
+	draftpick = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return self.name + u", " + self.user.username
+
+class Schedule(models.Model):
+	league = models.OneToOneField(League)
+	turn = models.IntegerField(default=0)
+	draft_start_date = models.DateTimeField(default=timezone.now())
+	draft_end_date = models.DateTimeField(default=timezone.datetime(2016,2,1,tzinfo=pytz.UTC))
+	
+	def get_players(self):
+		origorder = sorted(self.league.teams, key=lambda t:t.draftpick)
+		origorder += origorder[::-1]
+
+		return origorder[self.turn%16:]+origorder[:self.turn%16]
+		
+	@property
+	def can_draft(self):
+		if timezone.now() < self.draft_end_date and timezone.now() > self.draft_start_date and len(self.league.members.all()) == self.league.size:
+			return True
+		return False
