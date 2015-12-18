@@ -159,8 +159,8 @@ class WriteForm(BaseWriteForm):
 
     class Meta(BaseWriteForm.Meta):
         fields = ('recipients', 'subject', 'body')
-
-
+		
+		
 class AnonymousWriteForm(BaseWriteForm):
     """The form for an anonymous user, to compose a message."""
     # The 'max' customization should not be permitted here.

@@ -13,4 +13,3 @@ def league_get_available(request):
 def league_get_players(request):
 	league = request.user.members.first()
 	return HttpResponse(serialize('json', league.schedule.get_players()))
-	

@@ -69,19 +69,13 @@ function displayAthletes(athletes) {
 }
 
 function displayPlayers(players) {
-	document.getElementById("player-turn").innerHTML = "<table id='player_table'></table>";
-	table = document.getElementById('player_table');
-	var row = table.insertRow();
-	for(var key in players[0]["fields"]){
-		cell = row.insertCell();
-		cell.innerHTML = key;
-	}
-	for(var a in players) {
-		row = table.insertRow();	
-		for(var key in players[a]["fields"]) {
-			cell = row.insertCell();
-			cell.innerHTML = players[a]["fields"][key];
-		}
+	document.getElementById("player-turn").innerHTML = "<div id='player_table'></div>";
+	var div = document.getElementById('player_table');
+	for(a in players) {
+		var x = document.createElement("div");
+		x.setAttribute("id","player_div");
+		x.appendChild(document.createTextNode(players[a]["fields"]["name"]));
+		div.appendChild(x);
 	}
 }
 

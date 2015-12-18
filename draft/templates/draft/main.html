@@ -12,9 +12,8 @@
 
 <div id="player-turn">
 
-
 </div>
-</br></br>
+<br/>
 <div id="draft-content">
 Content loading...
 </div>
@@ -24,7 +23,7 @@ Content loading...
 {% if user.members.all %}
 
 Your league is ineligible to draft right now(due to size or date).
-</br>
+<br/>
 The draft starts on {{user.members.first.schedule.draft_start_date}}
 
 {% else %}
